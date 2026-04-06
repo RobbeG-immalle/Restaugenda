@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Plus, X } from 'lucide-react'
 import { formatCurrency } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 interface Sale {
   id: string
@@ -34,6 +35,7 @@ export default function SalesClient({
   totalProfit,
 }: SalesClientProps) {
   const router = useRouter()
+  const t = useTranslations('Sales')
   const [showForm, setShowForm] = useState(false)
   const [productId, setProductId] = useState('')
   const [quantity, setQuantity] = useState('')
@@ -46,12 +48,12 @@ export default function SalesClient({
     setError('')
 
     if (!productId) {
-      setError('Please select a product')
+      setError(t('errorSelectProduct'))
       return
     }
     const qty = parseInt(quantity)
     if (!qty || qty <= 0) {
-      setError('Quantity must be greater than 0')
+      setError(t('errorQuantity'))
       return
     }
 
@@ -84,26 +86,26 @@ export default function SalesClient({
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Sales</h1>
-          <p className="text-gray-600 mt-1">Track your sales and revenue</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
+          <p className="text-gray-600 mt-1">{t('subtitle')}</p>
         </div>
         <button
           onClick={() => setShowForm(true)}
           className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-emerald-700 transition-colors"
         >
           <Plus className="h-5 w-5" />
-          Log Sale
+          {t('logSale')}
         </button>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
         <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <p className="text-sm font-medium text-gray-600 mb-1">Total Revenue</p>
+          <p className="text-sm font-medium text-gray-600 mb-1">{t('totalRevenue')}</p>
           <p className="text-2xl font-bold text-gray-900">{formatCurrency(totalRevenue)}</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <p className="text-sm font-medium text-gray-600 mb-1">Total Profit</p>
+          <p className="text-sm font-medium text-gray-600 mb-1">{t('totalProfit')}</p>
           <p className="text-2xl font-bold text-emerald-600">{formatCurrency(totalProfit)}</p>
         </div>
       </div>
@@ -111,7 +113,7 @@ export default function SalesClient({
       {/* Sales Table */}
       {initialSales.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-          <p className="text-gray-500">No sales recorded yet.</p>
+          <p className="text-gray-500">{t('noSales')}</p>
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
@@ -119,11 +121,11 @@ export default function SalesClient({
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Qty</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Profit</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('product')}</th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('qty')}</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('date')}</th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('revenue')}</th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('profit')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -147,7 +149,7 @@ export default function SalesClient({
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-gray-900">Log a Sale</h2>
+              <h2 className="text-lg font-semibold text-gray-900">{t('logASale')}</h2>
               <button onClick={() => setShowForm(false)} className="text-gray-400 hover:text-gray-600">
                 <X className="h-5 w-5" />
               </button>
@@ -161,14 +163,14 @@ export default function SalesClient({
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Product</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('product')}</label>
                 <select
                   value={productId}
                   onChange={(e) => setProductId(e.target.value)}
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white"
                 >
-                  <option value="">Select product</option>
+                  <option value="">{t('selectProduct')}</option>
                   {products.map((p) => (
                     <option key={p.id} value={p.id}>{p.name}</option>
                   ))}
@@ -176,7 +178,7 @@ export default function SalesClient({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('quantity')}</label>
                 <input
                   type="number"
                   value={quantity}
@@ -189,7 +191,7 @@ export default function SalesClient({
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('date')}</label>
                 <input
                   type="date"
                   value={date}
@@ -205,14 +207,14 @@ export default function SalesClient({
                   onClick={() => setShowForm(false)}
                   className="flex-1 py-2.5 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
                 >
-                  Cancel
+                  {t('cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
                   className="flex-1 py-2.5 bg-emerald-600 text-white rounded-lg font-medium hover:bg-emerald-700 transition-colors disabled:opacity-50"
                 >
-                  {loading ? 'Saving...' : 'Log Sale'}
+                  {loading ? t('saving') : t('logSale')}
                 </button>
               </div>
             </form>

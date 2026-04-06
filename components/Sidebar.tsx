@@ -1,19 +1,21 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
 import { BarChart3, LayoutDashboard, Package, TrendingUp, LogOut } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-
-const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/dashboard/products', label: 'Products', icon: Package },
-  { href: '/dashboard/sales', label: 'Sales', icon: TrendingUp },
-]
+import { useTranslations } from 'next-intl'
+import { Link, usePathname, useRouter } from '@/i18n/navigation'
+import LanguageSwitcher from './LanguageSwitcher'
 
 export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
+  const t = useTranslations('Sidebar')
+
+  const navItems = [
+    { href: '/dashboard' as const, label: t('dashboard'), icon: LayoutDashboard },
+    { href: '/dashboard/products' as const, label: t('products'), icon: Package },
+    { href: '/dashboard/sales' as const, label: t('sales'), icon: TrendingUp },
+  ]
 
   const handleLogout = async () => {
     const supabase = createClient()
@@ -52,13 +54,14 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="p-4 border-t border-gray-100">
+      <div className="p-4 border-t border-gray-100 space-y-2">
+        <LanguageSwitcher />
         <button
           onClick={handleLogout}
           className="flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors w-full"
         >
           <LogOut className="h-5 w-5" />
-          Sign out
+          {t('signOut')}
         </button>
       </div>
     </aside>

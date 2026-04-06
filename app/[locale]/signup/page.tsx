@@ -1,13 +1,14 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { BarChart3 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useTranslations } from 'next-intl'
+import { Link, useRouter } from '@/i18n/navigation'
 
 export default function SignupPage() {
   const router = useRouter()
+  const t = useTranslations('Signup')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -42,13 +43,12 @@ export default function SignupPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
         <div className="max-w-md w-full text-center">
           <BarChart3 className="h-12 w-12 text-emerald-600 mx-auto mb-4" />
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">Check your email</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">{t('checkEmail')}</h1>
           <p className="text-gray-600">
-            We&apos;ve sent a confirmation link to <strong>{email}</strong>.
-            Click the link to activate your account.
+            {t('confirmationSent', { email })}
           </p>
           <Link href="/login" className="mt-6 inline-block text-emerald-600 font-medium hover:underline">
-            Back to sign in
+            {t('backToSignIn')}
           </Link>
         </div>
       </div>
@@ -63,8 +63,8 @@ export default function SignupPage() {
             <BarChart3 className="h-8 w-8 text-emerald-600" />
             <span className="text-2xl font-bold text-gray-900">Restaugenda</span>
           </Link>
-          <h1 className="mt-4 text-2xl font-bold text-gray-900">Create your account</h1>
-          <p className="mt-2 text-gray-600">1 month free — no credit card required</p>
+          <h1 className="mt-4 text-2xl font-bold text-gray-900">{t('title')}</h1>
+          <p className="mt-2 text-gray-600">{t('subtitle')}</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
@@ -76,7 +76,7 @@ export default function SignupPage() {
           <form onSubmit={handleSignup} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email address
+                {t('email')}
               </label>
               <input
                 type="email"
@@ -89,7 +89,7 @@ export default function SignupPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Password
+                {t('password')}
               </label>
               <input
                 type="password"
@@ -106,15 +106,15 @@ export default function SignupPage() {
               disabled={loading}
               className="w-full bg-emerald-600 text-white py-3 rounded-lg font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Creating account...' : 'Start Free Trial'}
+              {loading ? t('creatingAccount') : t('startFreeTrial')}
             </button>
           </form>
         </div>
 
         <p className="text-center mt-6 text-gray-600">
-          Already have an account?{' '}
+          {t('hasAccount')}{' '}
           <Link href="/login" className="text-emerald-600 font-medium hover:underline">
-            Sign in
+            {t('signIn')}
           </Link>
         </p>
       </div>

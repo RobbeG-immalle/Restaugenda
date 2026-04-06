@@ -1,64 +1,71 @@
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import { Check, BarChart3 } from 'lucide-react'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 
-const plans = [
-  {
-    name: 'Free Trial',
-    price: '€0',
-    period: 'for 1 month',
-    description: 'Try everything free for 30 days. No credit card required.',
-    features: [
-      'Unlimited products',
-      'Sales tracking',
-      'Profit & margin analytics',
-      'Dashboard overview',
-      'Email support',
-    ],
-    cta: 'Start Free Trial',
-    href: '/signup',
-    highlighted: false,
-    badge: '1 month free',
-  },
-  {
-    name: 'Monthly',
-    price: '€24.99',
-    period: 'per month',
-    description: 'Perfect for growing restaurants and bars.',
-    features: [
-      'Unlimited products',
-      'Sales tracking',
-      'Profit & margin analytics',
-      'Dashboard overview',
-      'Priority email support',
-      'Export reports',
-    ],
-    cta: 'Get Started',
-    href: '/signup',
-    highlighted: true,
-    badge: null,
-  },
-  {
-    name: 'Yearly',
-    price: '€250',
-    period: 'per year',
-    description: 'Best value — save ~17% compared to monthly.',
-    features: [
-      'Unlimited products',
-      'Sales tracking',
-      'Profit & margin analytics',
-      'Dashboard overview',
-      'Priority email support',
-      'Export reports',
-      'Dedicated account manager',
-    ],
-    cta: 'Get Started',
-    href: '/signup',
-    highlighted: false,
-    badge: 'Save ~17%',
-  },
-]
+export default async function PricingPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  setRequestLocale(locale)
 
-export default function PricingPage() {
+  const t = await getTranslations('Pricing')
+  const tNav = await getTranslations('Navigation')
+
+  const plans = [
+    {
+      name: t('freeTrial'),
+      price: t('freeTrialPrice'),
+      period: t('freeTrialPeriod'),
+      description: t('freeTrialDescription'),
+      features: [
+        t('unlimitedProducts'),
+        t('salesTracking'),
+        t('profitAnalytics'),
+        t('dashboardOverview'),
+        t('emailSupport'),
+      ],
+      cta: t('startFreeTrial'),
+      href: '/signup' as const,
+      highlighted: false,
+      badge: t('freeTrialBadge'),
+    },
+    {
+      name: t('monthly'),
+      price: t('monthlyPrice'),
+      period: t('monthlyPeriod'),
+      description: t('monthlyDescription'),
+      features: [
+        t('unlimitedProducts'),
+        t('salesTracking'),
+        t('profitAnalytics'),
+        t('dashboardOverview'),
+        t('priorityEmailSupport'),
+        t('exportReports'),
+      ],
+      cta: t('getStarted'),
+      href: '/signup' as const,
+      highlighted: true,
+      badge: null,
+    },
+    {
+      name: t('yearly'),
+      price: t('yearlyPrice'),
+      period: t('yearlyPeriod'),
+      description: t('yearlyDescription'),
+      features: [
+        t('unlimitedProducts'),
+        t('salesTracking'),
+        t('profitAnalytics'),
+        t('dashboardOverview'),
+        t('priorityEmailSupport'),
+        t('exportReports'),
+        t('dedicatedAccountManager'),
+      ],
+      cta: t('getStarted'),
+      href: '/signup' as const,
+      highlighted: false,
+      badge: t('yearlyBadge'),
+    },
+  ]
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
@@ -71,13 +78,13 @@ export default function PricingPage() {
             </Link>
             <div className="flex items-center gap-4">
               <Link href="/login" className="text-gray-600 hover:text-gray-900 font-medium">
-                Sign in
+                {tNav('signIn')}
               </Link>
               <Link
                 href="/signup"
                 className="bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-emerald-700 transition-colors"
               >
-                Get Started Free
+                {tNav('getStarted')}
               </Link>
             </div>
           </div>
@@ -87,9 +94,9 @@ export default function PricingPage() {
       {/* Pricing Header */}
       <section className="py-16 text-center">
         <div className="max-w-3xl mx-auto px-4">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Simple, transparent pricing</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">{t('title')}</h1>
           <p className="text-xl text-gray-600">
-            Start with a free trial. No credit card required.
+            {t('subtitle')}
           </p>
         </div>
       </section>

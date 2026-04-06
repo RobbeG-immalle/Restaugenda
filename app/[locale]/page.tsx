@@ -1,7 +1,14 @@
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import { BarChart3, TrendingUp, Shield, Zap } from 'lucide-react'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 
-export default function LandingPage() {
+export default async function LandingPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params
+  setRequestLocale(locale)
+
+  const t = await getTranslations('Landing')
+  const tNav = await getTranslations('Navigation')
+
   return (
     <div className="min-h-screen bg-white">
       {/* Navigation */}
@@ -14,16 +21,16 @@ export default function LandingPage() {
             </div>
             <div className="flex items-center gap-4">
               <Link href="/pricing" className="text-gray-600 hover:text-gray-900 font-medium">
-                Pricing
+                {tNav('pricing')}
               </Link>
               <Link href="/login" className="text-gray-600 hover:text-gray-900 font-medium">
-                Sign in
+                {tNav('signIn')}
               </Link>
               <Link
                 href="/signup"
                 className="bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-emerald-700 transition-colors"
               >
-                Get Started Free
+                {tNav('getStarted')}
               </Link>
             </div>
           </div>
@@ -35,28 +42,27 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
             <Zap className="h-4 w-4" />
-            1 month free trial — no credit card required
+            {t('trialBadge')}
           </div>
           <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
-            Track your restaurant&apos;s<br />
-            <span className="text-emerald-600">profitability</span> with ease
+            {t('heroTitle')}<br />
+            <span className="text-emerald-600">{t('heroProfitability')}</span> {t('heroTitleEnd')}
           </h1>
           <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-            Know exactly which products make you money. Calculate profit margins, track sales,
-            and make data-driven decisions for your restaurant or bar.
+            {t('heroDescription')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/signup"
               className="bg-emerald-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-emerald-700 transition-colors shadow-lg"
             >
-              Start Free Trial
+              {t('startFreeTrial')}
             </Link>
             <Link
               href="/pricing"
               className="bg-white text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-50 transition-colors border border-gray-200 shadow-sm"
             >
-              View Pricing
+              {t('viewPricing')}
             </Link>
           </div>
         </div>
@@ -67,10 +73,10 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Everything you need to maximize profits
+              {t('featuresTitle')}
             </h2>
             <p className="text-lg text-gray-600">
-              Simple tools that give you powerful insights
+              {t('featuresSubtitle')}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -78,27 +84,27 @@ export default function LandingPage() {
               <div className="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <BarChart3 className="h-7 w-7 text-emerald-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Product Profitability</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('featureProductTitle')}</h3>
               <p className="text-gray-600">
-                Track cost price and selling price for every item. See profit and margin at a glance.
+                {t('featureProductDescription')}
               </p>
             </div>
             <div className="text-center p-8 rounded-2xl bg-gray-50">
               <div className="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <TrendingUp className="h-7 w-7 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Sales Tracking</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('featureSalesTitle')}</h3>
               <p className="text-gray-600">
-                Log daily sales and instantly see your total revenue and profit across all products.
+                {t('featureSalesDescription')}
               </p>
             </div>
             <div className="text-center p-8 rounded-2xl bg-gray-50">
               <div className="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
                 <Shield className="h-7 w-7 text-purple-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Margin Alerts</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{t('featureMarginTitle')}</h3>
               <p className="text-gray-600">
-                Instantly see which products have high (green) or low (red) profit margins so you can act fast.
+                {t('featureMarginDescription')}
               </p>
             </div>
           </div>
@@ -109,23 +115,23 @@ export default function LandingPage() {
       <section className="py-20 bg-emerald-600">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to boost your restaurant&apos;s profits?
+            {t('ctaTitle')}
           </h2>
           <p className="text-emerald-100 text-lg mb-8">
-            Join hundreds of restaurants and bars already using Restaugenda.
+            {t('ctaDescription')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/signup"
               className="bg-white text-emerald-700 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-emerald-50 transition-colors"
             >
-              Start Free Trial
+              {t('startFreeTrial')}
             </Link>
             <Link
               href="/pricing"
               className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-emerald-700 transition-colors"
             >
-              See Pricing
+              {t('seePricing')}
             </Link>
           </div>
         </div>
@@ -140,13 +146,13 @@ export default function LandingPage() {
               <span className="text-white font-semibold">Restaugenda</span>
             </div>
             <div className="flex gap-6 text-sm">
-              <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-              <Link href="/login" className="hover:text-white transition-colors">Sign in</Link>
-              <Link href="/signup" className="hover:text-white transition-colors">Sign up</Link>
+              <Link href="/pricing" className="hover:text-white transition-colors">{tNav('pricing')}</Link>
+              <Link href="/login" className="hover:text-white transition-colors">{tNav('signIn')}</Link>
+              <Link href="/signup" className="hover:text-white transition-colors">{tNav('signUp')}</Link>
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-gray-800 text-center text-sm">
-            © {new Date().getFullYear()} Restaugenda. All rights reserved.
+            {t('footerRights', { year: new Date().getFullYear() })}
           </div>
         </div>
       </footer>
