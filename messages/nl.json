@@ -83,6 +83,7 @@
   },
   "Sidebar": {
     "dashboard": "Dashboard",
+    "orders": "Bestellingen",
     "products": "Producten",
     "sales": "Verkopen",
     "signOut": "Uitloggen"
@@ -153,6 +154,24 @@
     "saving": "Opslaan...",
     "errorSelectProduct": "Selecteer een product",
     "errorQuantity": "Aantal moet groter zijn dan 0"
+  },
+  "Orders": {
+    "title": "Bestellingen",
+    "subtitle": "Snel bestelling invoeren per tafel",
+    "allCategories": "Alles",
+    "tableNumber": "Tafel",
+    "selectTable": "Selecteer een tafel om te beginnen",
+    "noProducts": "Nog geen producten. Voeg eerst producten toe.",
+    "orderItems": "Bestellingsitems",
+    "emptyOrder": "Tik op een product om het toe te voegen",
+    "quantity": "Aantal",
+    "total": "Totaal",
+    "closeOrder": "Bestelling afsluiten",
+    "newOrder": "Nieuwe bestelling",
+    "orderClosed": "Bestelling succesvol afgesloten",
+    "table": "Tafel {number}",
+    "openOrders": "Open bestellingen",
+    "noOpenOrders": "Geen open bestellingen"
   },
   "LanguageSwitcher": {
     "en": "English",
