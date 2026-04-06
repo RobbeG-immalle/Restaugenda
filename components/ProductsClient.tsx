@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter } from '@/i18n/navigation'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import MarginBadge from './MarginBadge'
@@ -70,6 +70,22 @@ export default function ProductsClient({ initialProducts }: ProductsClientProps)
     setDeletingId(null)
   }
 
+  const groupedProducts = useMemo(
+    () =>
+      Array.from(
+        products.reduce((map, product) => {
+          let group = map.get(product.category)
+          if (!group) {
+            group = []
+            map.set(product.category, group)
+          }
+          group.push(product)
+          return map
+        }, new Map<string, Product[]>())
+      ),
+    [products]
+  )
+
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -97,53 +113,58 @@ export default function ProductsClient({ initialProducts }: ProductsClientProps)
           </button>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('name')}</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('category')}</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('cost')}</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('price')}</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('profit')}</th>
-                  <th className="text-center px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('margin')}</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('actions')}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {products.map((product) => (
-                  <tr key={product.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900">{product.name}</td>
-                    <td className="px-6 py-4 text-gray-600 text-sm">{product.category}</td>
-                    <td className="px-6 py-4 text-right text-gray-600">{formatCurrency(product.cost_price)}</td>
-                    <td className="px-6 py-4 text-right text-gray-900 font-medium">{formatCurrency(product.selling_price)}</td>
-                    <td className="px-6 py-4 text-right text-emerald-600 font-medium">{formatCurrency(product.profit)}</td>
-                    <td className="px-6 py-4 text-center">
-                      <MarginBadge margin={product.margin} />
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => setEditingProduct(product)}
-                          className="p-2 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(product.id)}
-                          disabled={deletingId === product.id}
-                          className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="space-y-6">
+          {groupedProducts.map(([category, categoryProducts]) => (
+            <div key={category} className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+              <div className="px-6 py-4 bg-emerald-50 border-b border-emerald-100">
+                <h2 className="text-base font-semibold text-emerald-800">{category}</h2>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('name')}</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('cost')}</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('price')}</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('profit')}</th>
+                      <th className="text-center px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('margin')}</th>
+                      <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('actions')}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {categoryProducts.map((product) => (
+                      <tr key={product.id} className="hover:bg-gray-50 transition-colors">
+                        <td className="px-6 py-4 font-medium text-gray-900">{product.name}</td>
+                        <td className="px-6 py-4 text-right text-gray-600">{formatCurrency(product.cost_price)}</td>
+                        <td className="px-6 py-4 text-right text-gray-900 font-medium">{formatCurrency(product.selling_price)}</td>
+                        <td className="px-6 py-4 text-right text-emerald-600 font-medium">{formatCurrency(product.profit)}</td>
+                        <td className="px-6 py-4 text-center">
+                          <MarginBadge margin={product.margin} />
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              onClick={() => setEditingProduct(product)}
+                              className="p-2 text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDelete(product.id)}
+                              disabled={deletingId === product.id}
+                              className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
