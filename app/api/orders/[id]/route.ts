@@ -28,7 +28,7 @@ export async function PUT(
   if (status === 'closed') {
     const { data: orderItems, error: itemsError } = await supabase
       .from('order_items')
-      .select('*, products(*)')
+      .select('id, order_id, product_id, quantity')
       .eq('order_id', id)
 
     if (itemsError) {

@@ -218,12 +218,12 @@ export default function OrdersClient({ initialProducts, initialOrders }: OrdersC
     [selectedTable, orders]
   )
 
-  const handleUpdateQuantity = async (item: OrderItem, delta: number) => {
+  const handleUpdateQuantity = useCallback(async (item: OrderItem, delta: number) => {
     if (!currentOrder) return
     const newQty = item.quantity + delta
 
     if (newQty <= 0) {
-      // Remove the item
+      // Remove the item — optimistic update
       setOrders((prev) =>
         prev.map((o) =>
           o.id === currentOrder.id
@@ -231,9 +231,21 @@ export default function OrdersClient({ initialProducts, initialOrders }: OrdersC
             : o
         )
       )
-      await fetch(`/api/orders/${currentOrder.id}/items?itemId=${item.id}`, {
-        method: 'DELETE',
-      })
+      try {
+        const res = await fetch(`/api/orders/${currentOrder.id}/items?itemId=${item.id}`, {
+          method: 'DELETE',
+        })
+        if (!res.ok) throw new Error('Failed to remove item')
+      } catch {
+        // Revert optimistic removal
+        setOrders((prev) =>
+          prev.map((o) =>
+            o.id === currentOrder.id
+              ? { ...o, order_items: [...o.order_items, item] }
+              : o
+          )
+        )
+      }
       return
     }
 
@@ -251,38 +263,33 @@ export default function OrdersClient({ initialProducts, initialOrders }: OrdersC
       )
     )
 
-    // Update via PATCH: reuse the POST endpoint which merges quantities
-    // Instead, delete and re-insert with new quantity
-    // Actually, let's directly update by deleting and re-adding
-    // We'll use the items POST endpoint to set the exact quantity
-    // For simplicity, delete and re-add with the new quantity
-    await fetch(`/api/orders/${currentOrder.id}/items?itemId=${item.id}`, {
-      method: 'DELETE',
-    })
-    if (newQty > 0) {
-      await fetch(`/api/orders/${currentOrder.id}/items`, {
-        method: 'POST',
+    try {
+      const res = await fetch(`/api/orders/${currentOrder.id}/items`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId: item.product_id, quantity: newQty }),
+        body: JSON.stringify({ itemId: item.id, quantity: newQty }),
       })
-    }
-  }
-
-  const handleRemoveItem = async (item: OrderItem) => {
-    if (!currentOrder) return
-
-    setOrders((prev) =>
-      prev.map((o) =>
-        o.id === currentOrder.id
-          ? { ...o, order_items: o.order_items.filter((i) => i.id !== item.id) }
-          : o
+      if (!res.ok) throw new Error('Failed to update quantity')
+    } catch {
+      // Revert optimistic update
+      setOrders((prev) =>
+        prev.map((o) =>
+          o.id === currentOrder.id
+            ? {
+                ...o,
+                order_items: o.order_items.map((i) =>
+                  i.id === item.id ? { ...i, quantity: item.quantity } : i
+                ),
+              }
+            : o
+        )
       )
-    )
+    }
+  }, [currentOrder])
 
-    await fetch(`/api/orders/${currentOrder.id}/items?itemId=${item.id}`, {
-      method: 'DELETE',
-    })
-  }
+  const handleRemoveItem = useCallback((item: OrderItem) => {
+    handleUpdateQuantity(item, -item.quantity)
+  }, [handleUpdateQuantity])
 
   const handleCloseOrder = async () => {
     if (!currentOrder) return
