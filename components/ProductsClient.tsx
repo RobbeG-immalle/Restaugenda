@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/i18n/navigation'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import MarginBadge from './MarginBadge'
 import ProductForm from './ProductForm'
 import { formatCurrency } from '@/lib/utils'
+import { useTranslations } from 'next-intl'
 
 interface Product {
   id: string
@@ -23,6 +24,8 @@ interface ProductsClientProps {
 
 export default function ProductsClient({ initialProducts }: ProductsClientProps) {
   const router = useRouter()
+  const t = useTranslations('Products')
+  const tForm = useTranslations('ProductForm')
   const [products, setProducts] = useState(initialProducts)
   const [showForm, setShowForm] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
@@ -58,7 +61,7 @@ export default function ProductsClient({ initialProducts }: ProductsClientProps)
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this product?')) return
+    if (!confirm(t('confirmDelete'))) return
     setDeletingId(id)
     const res = await fetch(`/api/products/${id}`, { method: 'DELETE' })
     if (res.ok) {
@@ -71,26 +74,26 @@ export default function ProductsClient({ initialProducts }: ProductsClientProps)
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Products</h1>
-          <p className="text-gray-600 mt-1">Manage your products and track margins</p>
+          <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
+          <p className="text-gray-600 mt-1">{t('subtitle')}</p>
         </div>
         <button
           onClick={() => setShowForm(true)}
           className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2.5 rounded-lg font-medium hover:bg-emerald-700 transition-colors"
         >
           <Plus className="h-5 w-5" />
-          Add Product
+          {t('addProduct')}
         </button>
       </div>
 
       {products.length === 0 ? (
         <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-          <p className="text-gray-500 mb-4">No products yet. Add your first product!</p>
+          <p className="text-gray-500 mb-4">{t('noProducts')}</p>
           <button
             onClick={() => setShowForm(true)}
             className="bg-emerald-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-emerald-700 transition-colors"
           >
-            Add Product
+            {t('addProduct')}
           </button>
         </div>
       ) : (
@@ -99,13 +102,13 @@ export default function ProductsClient({ initialProducts }: ProductsClientProps)
             <table className="w-full">
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Cost</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Profit</th>
-                  <th className="text-center px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Margin</th>
-                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('name')}</th>
+                  <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('category')}</th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('cost')}</th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('price')}</th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('profit')}</th>
+                  <th className="text-center px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('margin')}</th>
+                  <th className="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">{t('actions')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -146,7 +149,7 @@ export default function ProductsClient({ initialProducts }: ProductsClientProps)
 
       {showForm && (
         <ProductForm
-          title="Add Product"
+          title={tForm('addProduct')}
           onSubmit={handleCreate}
           onClose={() => setShowForm(false)}
         />
@@ -154,7 +157,7 @@ export default function ProductsClient({ initialProducts }: ProductsClientProps)
 
       {editingProduct && (
         <ProductForm
-          title="Edit Product"
+          title={tForm('editProduct')}
           onSubmit={handleEdit}
           onClose={() => setEditingProduct(null)}
           initialData={editingProduct}

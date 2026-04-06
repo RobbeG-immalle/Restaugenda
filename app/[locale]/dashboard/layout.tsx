@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Sidebar from '@/components/Sidebar'
+import { getLocale } from 'next-intl/server'
 
 export default async function DashboardLayout({
   children,
@@ -11,7 +12,8 @@ export default async function DashboardLayout({
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) {
-    redirect('/login')
+    const locale = await getLocale()
+    redirect(`/${locale}/login`)
   }
 
   return (
