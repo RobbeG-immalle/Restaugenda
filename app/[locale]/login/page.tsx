@@ -9,7 +9,6 @@ import { Link, useRouter } from '@/i18n/navigation'
 export default function LoginPage() {
   const router = useRouter()
   const t = useTranslations('Login')
-  const tNav = useTranslations('Navigation')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')

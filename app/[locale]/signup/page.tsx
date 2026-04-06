@@ -4,10 +4,9 @@ import { useState } from 'react'
 import { BarChart3 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useTranslations } from 'next-intl'
-import { Link, useRouter } from '@/i18n/navigation'
+import { Link } from '@/i18n/navigation'
 
 export default function SignupPage() {
-  const router = useRouter()
   const t = useTranslations('Signup')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

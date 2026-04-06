@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { calculateProfit, formatCurrency } from '@/lib/utils'
+import { calculateProfit } from '@/lib/utils'
 import SalesClient from '@/components/SalesClient'
 
 export default async function SalesPage() {
