@@ -287,10 +287,6 @@ export default function OrdersClient({ initialProducts, initialOrders }: OrdersC
     }
   }, [currentOrder])
 
-  const handleRemoveItem = useCallback((item: OrderItem) => {
-    handleUpdateQuantity(item, -item.quantity)
-  }, [handleUpdateQuantity])
-
   const handleCloseOrder = async () => {
     if (!currentOrder) return
     setLoading(true)
@@ -462,7 +458,7 @@ export default function OrdersClient({ initialProducts, initialOrders }: OrdersC
                       <Plus className="h-3 w-3 text-gray-600" />
                     </button>
                     <button
-                      onClick={() => handleRemoveItem(item)}
+                      onClick={() => handleUpdateQuantity(item, -item.quantity)}
                       className="w-7 h-7 rounded-full hover:bg-red-50 flex items-center justify-center transition-colors ml-1"
                     >
                       <X className="h-3 w-3 text-gray-400 hover:text-red-500" />
