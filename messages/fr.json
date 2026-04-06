@@ -83,6 +83,7 @@
   },
   "Sidebar": {
     "dashboard": "Tableau de bord",
+    "orders": "Commandes",
     "products": "Produits",
     "sales": "Ventes",
     "signOut": "Se déconnecter"
@@ -153,6 +154,24 @@
     "saving": "Enregistrement...",
     "errorSelectProduct": "Veuillez sélectionner un produit",
     "errorQuantity": "La quantité doit être supérieure à 0"
+  },
+  "Orders": {
+    "title": "Commandes",
+    "subtitle": "Saisie rapide des commandes par table",
+    "allCategories": "Tout",
+    "tableNumber": "Table",
+    "selectTable": "Sélectionnez une table pour commencer",
+    "noProducts": "Pas encore de produits. Ajoutez d'abord des produits.",
+    "orderItems": "Articles de la commande",
+    "emptyOrder": "Appuyez sur un produit pour l'ajouter",
+    "quantity": "Qté",
+    "total": "Total",
+    "closeOrder": "Clôturer la commande",
+    "newOrder": "Nouvelle commande",
+    "orderClosed": "Commande clôturée avec succès",
+    "table": "Table {number}",
+    "openOrders": "Commandes ouvertes",
+    "noOpenOrders": "Aucune commande ouverte"
   },
   "LanguageSwitcher": {
     "en": "English",

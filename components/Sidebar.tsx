@@ -1,6 +1,6 @@
 'use client'
 
-import { BarChart3, LayoutDashboard, Package, TrendingUp, LogOut } from 'lucide-react'
+import { BarChart3, LayoutDashboard, Package, ShoppingCart, TrendingUp, LogOut } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useTranslations } from 'next-intl'
 import { Link, usePathname, useRouter } from '@/i18n/navigation'
@@ -13,6 +13,7 @@ export default function Sidebar() {
 
   const navItems = [
     { href: '/dashboard' as const, label: t('dashboard'), icon: LayoutDashboard },
+    { href: '/dashboard/orders' as const, label: t('orders'), icon: ShoppingCart },
     { href: '/dashboard/products' as const, label: t('products'), icon: Package },
     { href: '/dashboard/sales' as const, label: t('sales'), icon: TrendingUp },
   ]

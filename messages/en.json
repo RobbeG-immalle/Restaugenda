@@ -83,6 +83,7 @@
   },
   "Sidebar": {
     "dashboard": "Dashboard",
+    "orders": "Orders",
     "products": "Products",
     "sales": "Sales",
     "signOut": "Sign out"
@@ -153,6 +154,24 @@
     "saving": "Saving...",
     "errorSelectProduct": "Please select a product",
     "errorQuantity": "Quantity must be greater than 0"
+  },
+  "Orders": {
+    "title": "Orders",
+    "subtitle": "Quick order entry by table",
+    "allCategories": "All",
+    "tableNumber": "Table",
+    "selectTable": "Select a table to start",
+    "noProducts": "No products yet. Add products first.",
+    "orderItems": "Order Items",
+    "emptyOrder": "Tap a product to add it to this order",
+    "quantity": "Qty",
+    "total": "Total",
+    "closeOrder": "Close Order",
+    "newOrder": "New Order",
+    "orderClosed": "Order closed successfully",
+    "table": "Table {number}",
+    "openOrders": "Open Orders",
+    "noOpenOrders": "No open orders"
   },
   "LanguageSwitcher": {
     "en": "English",
